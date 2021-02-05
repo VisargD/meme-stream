@@ -14,6 +14,8 @@ mongoose.connect('mongodb://localhost:27017/xmeme', {useNewUrlParser: true, useU
     })
 
 
+app.use(express.urlencoded({extended: true}))
+
 app.get('/memes', async (req, res) => {
     const memes = await Meme.find({}).sort({timestamp: -1}).limit(100);    
     res.json(memes);
@@ -26,6 +28,12 @@ app.get('/memes/:id', async (req, res) => {
     } catch(err) {
        res.sendStatus(404);
     }
+})
+
+app.post('/memes', async (req, res) => {
+    const meme = await new Meme({...req.body, timestamp: new Date()});  
+    await meme.save();  
+    res.json({id: meme._id});
 })
 
 app.listen(8081, () => {
