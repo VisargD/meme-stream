@@ -48,6 +48,22 @@ app.delete('/memes/:id', async (req, res) => {
     }
 })
 
+app.patch('/memes/:id', async (req, res) => {
+    try {
+        await Meme.updateOne(
+            {_id: req.params.id}, 
+            {
+                $set: {
+                    caption: req.body.caption,
+                    url: req.body.url,
+                } 
+            } 
+        )
+        res.sendStatus(200);
+    } catch (err) {
+        res.sendStatus(404);
+    }
+})
 
 app.listen(8081, () => {
     console.log('Server running on port 8081');
