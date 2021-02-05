@@ -24,9 +24,12 @@ app.get('/memes', async (req, res) => {
 app.get('/memes/:id', async (req, res) => {
     try {
         const meme = await Meme.findById(req.params.id);        
-        res.json(meme);        
-    } catch(err) {
-       res.sendStatus(404);
+        if (meme === null) {
+            throw new Error();
+        }
+        res.json(meme);
+    } catch(err) {        
+        res.sendStatus(404);
     }
 })
 
@@ -35,6 +38,16 @@ app.post('/memes', async (req, res) => {
     await meme.save();  
     res.json({id: meme._id});
 })
+
+app.delete('/memes/:id', async (req, res) => {
+    try{
+        const del = await Meme.deleteOne({_id: req.params.id});
+        res.json({deleted: req.params.id});
+    } catch (err) {
+        res.sendStatus(404);
+    }
+})
+
 
 app.listen(8081, () => {
     console.log('Server running on port 8081');
