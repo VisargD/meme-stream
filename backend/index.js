@@ -19,6 +19,15 @@ app.get('/memes', async (req, res) => {
     res.json(memes);
 })
 
+app.get('/memes/:id', async (req, res) => {
+    try {
+        const meme = await Meme.findById(req.params.id);        
+        res.json(meme);        
+    } catch(err) {
+       res.sendStatus(404);
+    }
+})
+
 app.listen(8081, () => {
     console.log('Server running on port 8081');
 })
