@@ -17,6 +17,7 @@ mongoose.connect('mongodb://localhost:27017/xmeme', {useNewUrlParser: true, useU
 app.use(express.urlencoded({extended: true}))
 app.use(express.json());
 
+
 app.get('/memes', async (req, res) => {
     const memes = await Meme.find({}).sort({timestamp: -1}).limit(100);    
     res.json(memes);
