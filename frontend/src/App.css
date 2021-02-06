@@ -40,3 +40,8 @@
 .inputField {
   margin: 5px;
 }
+
+.meme-image {
+  width: 400px;
+  height: 400px;
+}
