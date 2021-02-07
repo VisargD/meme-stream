@@ -10,13 +10,17 @@ export default function MemeForm() {
   const [caption, setCaption] = useState("");
 
   const submitHandler = async (e) => {
-    e.preventDefault();
-    const data = await axios.post("/memes", { name, url, caption });
-    const list = await axios.get("/memes");
-    setMemes(list.data);
-    setName("");
-    setUrl("");
-    setCaption("");
+    try {
+      e.preventDefault();
+      const data = await axios.post("/memes", { name, url, caption });
+      const list = await axios.get("/memes");
+      setMemes(list.data);
+      setName("");
+      setUrl("");
+      setCaption("");
+    } catch (e) {
+      alert("Duplicate Post");
+    }
   };
 
   return (
