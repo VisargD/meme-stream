@@ -1,13 +1,14 @@
-import './App.css';
-import Form from './components/MemeForm';
-import MemeList from './components/MemeList';
+import "./App.css";
+import MemeList from "./components/MemeList";
+import { MemeProvider } from "./context/MemeContext";
 
 function App() {
   return (
-    <div className="App">
-      <Form/>
-      <MemeList />
-    </div>
+    <MemeProvider>
+      <div className="App">
+        <MemeList />
+      </div>
+    </MemeProvider>
   );
 }
 

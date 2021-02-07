@@ -1,23 +1,19 @@
-import React from "react";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useContext } from "react";
+import MemeForm from "./MemeForm";
+import { MemeContext } from "../context/MemeContext";
 
-export default function MemeList(props) {
-  const [memes, setMemes] = useState([]);
-
-  useEffect(async () => {
-    const data = await axios.get("/memes");
-    setMemes(data.data);
-  }, []);
+export default function MemeList() {
+  const [memes, setMemes] = useContext(MemeContext);
 
   return (
     <div>
+      <MemeForm />
       {memes.map((meme) => {
         return (
           <>
             <h2>{meme.name}</h2>
             <h3>{meme.caption}</h3>
-            <img class='meme-image' src={meme.url} />
+            <img class="meme-image" src={meme.url} />
           </>
         );
       })}
