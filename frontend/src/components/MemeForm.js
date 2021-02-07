@@ -8,7 +8,7 @@ const useStyle = makeStyles((theme) => ({
   root: {
     "& .MuiFormControl-root": {
       margin: theme.spacing(1),
-      width: "50%",
+      width: "80%",
     },
     "& Button": {
       margin: theme.spacing(1),
@@ -16,11 +16,12 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-export default function MemeForm() {
+export default function MemeForm(props) {
   const [memes, setMemes] = useContext(MemeContext);
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [caption, setCaption] = useState("");
+  const { afterSubmit } = props;
 
   const submitHandler = async (e) => {
     try {
@@ -31,6 +32,7 @@ export default function MemeForm() {
       setName("");
       setUrl("");
       setCaption("");
+      afterSubmit();
     } catch (e) {
       alert("Duplicate Post");
     }
