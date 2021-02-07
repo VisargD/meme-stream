@@ -5,11 +5,17 @@ import axios from "axios";
 import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 import Popup from "./controls/Popup";
+import EditForm from "./EditForm";
 
 export default function MemeList() {
   const [memes, setMemes] = useContext(MemeContext);
   const [openPopup, setOpenPopup] = useState(false);
+  const [editId, setEditId] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editUrl, setEditUrl] = useState("");
+  const [editCaption, setEditCaption] = useState("");
 
   const deleteHandler = async (id) => {
     await axios.delete("/memes/" + id);
@@ -46,12 +52,41 @@ export default function MemeList() {
             >
               Delete
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<EditIcon />}
+              onClick={() => {
+                setEditId(meme.id);
+                setEditName(meme.name);
+                setEditUrl(meme.url);
+                setEditCaption(meme.caption);
+                setOpenPopup(true);
+              }}
+            >
+              Edit
+            </Button>
           </>
         );
       })}
       <Popup openPopup={openPopup} setOpenPopup={setOpenPopup} title="Add Meme">
         {" "}
         <MemeForm afterSubmit={afterSubmit} />{" "}
+      </Popup>
+
+      <Popup
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+        title="Edit Meme"
+      >
+        {" "}
+        <EditForm
+          afterSubmit={afterSubmit}
+          editId={editId}
+          editName={editName}
+          editUrl={editUrl}
+          editCaption={editCaption}
+        />{" "}
       </Popup>
     </div>
   );
