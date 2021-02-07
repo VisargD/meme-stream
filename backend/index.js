@@ -36,9 +36,18 @@ app.get('/memes/:id', async (req, res) => {
 })
 
 app.post('/memes', async (req, res) => {
-    const meme = await new Meme({...req.body, timestamp: new Date()});  
-    await meme.save();  
-    res.json({id: meme._id});
+
+    try {
+        if ((await Meme.find({ $or: [ {name: req.body.name}, {url: req.body.url}, {caption: req.body.caption}]})) !== []) {
+            res.sendStatus(409);
+        } else {
+            const meme = await new Meme({...req.body, timestamp: new Date()});  
+            await meme.save();  
+            res.json({id: meme._id});
+        }
+    } catch (e) {
+        res.sendStatus(409);
+    }
 })
 
 app.delete('/memes/:id', async (req, res) => {
