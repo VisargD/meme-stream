@@ -39,7 +39,7 @@ app.get("/memes/:id", async (req, res) => {
 app.post("/memes", async (req, res) => {
   try {
     const found = await Meme.find({
-      $or: [
+      $and: [
         { name: req.body.name },
         { url: req.body.url },
         { caption: req.body.caption },
@@ -73,8 +73,14 @@ app.delete("/memes/:id", async (req, res) => {
 
 app.patch("/memes/:id", async (req, res) => {
   try {
+    const meme = await Meme.findById(req.params.id);
     const found = await Meme.find({
-      $and: [{ url: req.body.url }, { caption: req.body.caption }],
+      $and: [
+        { url: req.body.url },
+        { caption: req.body.caption },
+        { _id: { $ne: req.params.id } },
+        { name: meme.name },
+      ],
     });
     if (found.length !== 0) {
       throw new Error("Duplicate");
@@ -92,8 +98,10 @@ app.patch("/memes/:id", async (req, res) => {
   } catch (err) {
     if (err.message === "Duplicate") {
       res.sendStatus(409);
+    } else {
+      console.log(err);
+      res.sendStatus(404);
     }
-    res.sendStatus(404);
   }
 });
 
