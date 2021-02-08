@@ -3,9 +3,9 @@ import axios from "axios";
 import { useState } from "react";
 import { MemeContext } from "../../context/MemeContext";
 import { TextField, Button, makeStyles, Grid } from "@material-ui/core";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { failure, success } from "../controls/toast";
+import { failure } from "../controls/toast";
 
 const useStyle = makeStyles((theme) => ({
   root: {
