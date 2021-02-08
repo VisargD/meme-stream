@@ -3,6 +3,9 @@ import axios from "axios";
 import { useState } from "react";
 import { MemeContext } from "../../context/MemeContext";
 import { TextField, Button, makeStyles, Grid } from "@material-ui/core";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { failure, success } from "../controls/toast";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -26,15 +29,22 @@ export default function MemeForm(props) {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
+      await axios.get(url);
       const data = await axios.post("/memes", { name, url, caption });
       const list = await axios.get("/memes");
       setMemes(list.data);
       setName("");
       setUrl("");
-      setCaption("");
+      setCaption("");      
       afterSubmit();
     } catch (e) {
-      alert("Duplicate Post");
+      if (e.message === "Network Error") {
+        failure("Invalid Image URL");
+      } else if (e.response.status === 404) {
+        failure("Invalid Image URL");
+      } else {
+        failure("Duplicate Post");
+      }
     }
   };
 
@@ -79,6 +89,7 @@ export default function MemeForm(props) {
           Submit
         </Button>
       </form>
+      <ToastContainer />
     </div>
   );
 }

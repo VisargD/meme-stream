@@ -23,6 +23,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
+import { success } from "./controls/toast";
+import { ToastContainer } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,8 +76,11 @@ export default function MemeList() {
     setMemes(data.data);
   };
 
-  const afterSubmit = () => {
+  const afterSubmit = (msg) => {
     setOpenPopup(false);
+    setFormType("");
+    success(msg);
+    
   };
 
   return (
@@ -149,7 +154,7 @@ export default function MemeList() {
           title="Add Meme"
         >
           {" "}
-          <MemeForm afterSubmit={afterSubmit} />{" "}
+          <MemeForm afterSubmit={() => afterSubmit('Meme Added Successfully')} />{" "}
         </Popup>
       )}
       {formType === "edit" && (
@@ -162,6 +167,7 @@ export default function MemeList() {
           <EditForm afterSubmit={afterSubmit} editItem={editItem} />{" "}
         </Popup>
       )}
+      <ToastContainer />
     </div>
   );
 }
