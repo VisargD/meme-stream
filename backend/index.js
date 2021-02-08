@@ -68,6 +68,15 @@ app.delete("/memes/:id", async (req, res) => {
 
 app.patch("/memes/:id", async (req, res) => {
   try {
+    const found = await Meme.find({
+      $and: [        
+        { url: req.body.url },
+        { caption: req.body.caption },
+      ],
+    });
+    if (found.length !== 0) {
+      throw new Error('Duplicate');
+    }
     await Meme.updateOne(
       { _id: req.params.id },
       {
@@ -79,6 +88,9 @@ app.patch("/memes/:id", async (req, res) => {
     );
     res.sendStatus(200);
   } catch (err) {
+    if (err.message === 'Duplicate') {
+      res.sendStatus(409);
+    }
     res.sendStatus(404);
   }
 });
