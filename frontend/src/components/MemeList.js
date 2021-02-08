@@ -23,7 +23,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import { success } from "./controls/toast";
+import { failure, success } from "./controls/toast";
 import { ToastContainer } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -71,16 +71,20 @@ export default function MemeList() {
   const [formType, setFormType] = useState("");
 
   const deleteHandler = async (id) => {
-    await axios.delete("/memes/" + id);
-    const data = await axios.get("/memes");
-    setMemes(data.data);
+    try {
+      await axios.delete("/memes/" + id);
+      const data = await axios.get("/memes");
+      setMemes(data.data);
+      success("Deleted Successfully");
+    } catch (e) {
+      failure("The post was already deleted");
+    }
   };
 
   const afterSubmit = (msg) => {
     setOpenPopup(false);
     setFormType("");
     success(msg);
-    
   };
 
   return (
@@ -154,7 +158,9 @@ export default function MemeList() {
           title="Add Meme"
         >
           {" "}
-          <MemeForm afterSubmit={() => afterSubmit('Meme Added Successfully')} />{" "}
+          <MemeForm
+            afterSubmit={() => afterSubmit("Meme Added Successfully")}
+          />{" "}
         </Popup>
       )}
       {formType === "edit" && (

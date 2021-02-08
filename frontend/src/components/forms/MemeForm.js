@@ -29,17 +29,17 @@ export default function MemeForm(props) {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      await axios.get(url);
+      await axios.get(url, { crossdomain: true });
       const data = await axios.post("/memes", { name, url, caption });
       const list = await axios.get("/memes");
       setMemes(list.data);
       setName("");
       setUrl("");
-      setCaption("");      
+      setCaption("");
       afterSubmit();
     } catch (e) {
       if (e.message === "Network Error") {
-        failure("Invalid Image URL");
+        failure("Invalid Image URL due to CORS Policy");
       } else if (e.response.status === 404) {
         failure("Invalid Image URL");
       } else {
