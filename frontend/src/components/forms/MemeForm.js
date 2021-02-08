@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import axios from "axios";
 import { useState } from "react";
-import { MemeContext } from "../context/MemeContext";
+import { MemeContext } from "../../context/MemeContext";
 import { TextField, Button, makeStyles, Grid } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({

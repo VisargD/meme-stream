@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import axios from "axios";
 import { useState } from "react";
-import { MemeContext } from "../context/MemeContext";
+import { MemeContext } from "../../context/MemeContext";
 import { TextField, Button, makeStyles, Grid } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({
@@ -17,16 +17,16 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function EditForm(props) {
-  const { afterSubmit, editId, editName, editUrl, editCaption } = props;
+  const { afterSubmit, editItem } = props;  
   const [memes, setMemes] = useContext(MemeContext);
-  const [name, setName] = useState(editName);
-  const [url, setUrl] = useState(editUrl);
-  const [caption, setCaption] = useState(editCaption);
+  const [name, setName] = useState(editItem.name);
+  const [url, setUrl] = useState(editItem.url);
+  const [caption, setCaption] = useState(editItem.caption);
 
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      const data = await axios.patch("/memes/" + editId, { url, caption });
+      const data = await axios.patch("/memes/" + editItem.id, { url, caption });
       const list = await axios.get("/memes");
       setMemes(list.data);
       setName("");

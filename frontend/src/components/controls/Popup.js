@@ -5,7 +5,6 @@ import {
   DialogContent,
   makeStyles,
 } from "@material-ui/core";
-import MemeForm from "../MemeForm";
 import CloseIcon from "@material-ui/icons/Close";
 import IconButton from "@material-ui/core/IconButton";
 
