@@ -170,7 +170,7 @@ export default function MemeList() {
           title="Edit Meme"
         >
           {" "}
-          <EditForm afterSubmit={afterSubmit} editItem={editItem} />{" "}
+          <EditForm afterSubmit={() => afterSubmit("Meme Edited Successfully")} editItem={editItem} />{" "}
         </Popup>
       )}
       <ToastContainer />

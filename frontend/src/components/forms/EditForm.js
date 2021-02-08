@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { MemeContext } from "../../context/MemeContext";
 import { TextField, Button, makeStyles, Grid } from "@material-ui/core";
+import { failure } from "../controls/toast";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -26,6 +27,7 @@ export default function EditForm(props) {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
+      await axios.get(url);
       const data = await axios.patch("/memes/" + editItem.id, { url, caption });
       const list = await axios.get("/memes");
       setMemes(list.data);
@@ -34,7 +36,13 @@ export default function EditForm(props) {
       setCaption("");
       afterSubmit();
     } catch (e) {
-      alert("The Post was deleted");
+      if (e.message === "Network Error") {
+        failure("Invalid Image URL due to CORS Policy");
+      } else if (e.response.status === 404) {
+        failure("Invalid Image URL");
+      } else {
+        failure("Duplicate Post");
+      }
     }
   };
 
