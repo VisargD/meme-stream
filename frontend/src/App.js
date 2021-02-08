@@ -1,4 +1,3 @@
-import "./App.css";
 import MemeList from "./components/MemeList";
 import { MemeProvider } from "./context/MemeContext";
 

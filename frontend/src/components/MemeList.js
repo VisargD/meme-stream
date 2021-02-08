@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 export default function MemeList() {
   const [memes, setMemes] = useContext(MemeContext);
   const [openPopup, setOpenPopup] = useState(false);
-  
+
   const [editItem, setEditItem] = useState({});
   const classes = useStyles();
   const [formType, setFormType] = useState("");
@@ -159,10 +159,7 @@ export default function MemeList() {
           title="Edit Meme"
         >
           {" "}
-          <EditForm
-            afterSubmit={afterSubmit}
-            editItem={editItem}
-          />{" "}
+          <EditForm afterSubmit={afterSubmit} editItem={editItem} />{" "}
         </Popup>
       )}
     </div>

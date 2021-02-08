@@ -17,7 +17,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function EditForm(props) {
-  const { afterSubmit, editItem } = props;  
+  const { afterSubmit, editItem } = props;
   const [memes, setMemes] = useContext(MemeContext);
   const [name, setName] = useState(editItem.name);
   const [url, setUrl] = useState(editItem.url);
