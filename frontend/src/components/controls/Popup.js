@@ -10,6 +10,9 @@ import IconButton from "@material-ui/core/IconButton";
 
 const useStyle = makeStyles((theme) => ({
   root: {
+    "&": {
+      overflow: 'scroll',
+    },
     "& .title": {
       display: "flex",
       justifyContent: "space-between",

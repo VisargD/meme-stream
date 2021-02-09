@@ -8,6 +8,8 @@ import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import Popup from "./controls/Popup";
 import EditForm from "./forms/EditForm";
+import LikeDislike from "./forms/LikeDislike";
+
 import {
   makeStyles,
   Grid,
@@ -23,6 +25,8 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { failure, success } from "./controls/toast";
 import { ToastContainer } from "react-toastify";
+import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined";
+import ThumbDownOutlinedIcon from "@material-ui/icons/ThumbDownOutlined";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,10 +65,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MemeList() {
-  const [memes, setMemes] = useContext(MemeContext);
+  const { meme, like, dislike } = useContext(MemeContext);
+  const [memes, setMemes] = meme;
+  const [likes, setLikes] = like;
+  const [dislikes, setDislikes] = dislike;
   const [openPopup, setOpenPopup] = useState(false);
-
   const [editItem, setEditItem] = useState({});
+  const [likeDislikeItem, setLikeDislikeItem] = useState({});
+
   const classes = useStyles();
   const [formType, setFormType] = useState("");
 
@@ -142,6 +150,39 @@ export default function MemeList() {
                   >
                     Edit
                   </Button>
+                  <Button
+                    variant="contained"
+                    color="white"
+                    startIcon={<ThumbUpOutlinedIcon />}
+                    onClick={() => {
+                      setFormType("like");
+                      setOpenPopup(true);
+                      setLikeDislikeItem(
+                        likes.find((obj) => obj.id === meme.id)
+                      );
+                    }}
+                  >
+                    {likes.find((obj) => obj.id === meme.id)
+                      ? likes.find((obj) => obj.id === meme.id).likes.length
+                      : 0}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="white"
+                    startIcon={<ThumbDownOutlinedIcon />}
+                    onClick={() => {
+                      setFormType("dislike");
+                      setOpenPopup(true);
+                      setLikeDislikeItem(
+                        dislikes.find((obj) => obj.id === meme.id)
+                      );
+                    }}
+                  >
+                    {dislikes.find((obj) => obj.id === meme.id)
+                      ? dislikes.find((obj) => obj.id === meme.id).dislikes
+                          .length
+                      : 0}
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -171,6 +212,34 @@ export default function MemeList() {
           <EditForm
             afterSubmit={() => afterSubmit("Meme Edited Successfully")}
             editItem={editItem}
+          />{" "}
+        </Popup>
+      )}
+      {formType === "like" && (
+        <Popup
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+          title="Like Meme"
+        >
+          {" "}
+          <LikeDislike
+            afterSubmit={() => afterSubmit("Liked by user!!")}
+            likeDislikeItem={likeDislikeItem}
+            type={formType}
+          />{" "}
+        </Popup>
+      )}
+      {formType === "dislike" && (
+        <Popup
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+          title="Dislike Meme"
+        >
+          {" "}
+          <LikeDislike
+            afterSubmit={() => afterSubmit("Disliked by user!!")}
+            likeDislikeItem={likeDislikeItem}
+            type={formType}
           />{" "}
         </Popup>
       )}
