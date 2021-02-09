@@ -51,7 +51,7 @@ likeDislikeRouter.put("/memes/likes/:id", async (req, res) => {
     res.sendStatus(200);
   } catch (err) {
     if (err.message === "Duplicate") {
-      res.send("Already liked by user").status(409);
+      res.sendStatus(409);
     } else if (err.message === "Bad") {
       res.sendStatus(400);
     } else {
@@ -122,7 +122,7 @@ likeDislikeRouter.put("/memes/dislikes/:id", async (req, res) => {
     res.sendStatus(200);
   } catch (err) {
     if (err.message === "Duplicate") {
-      res.send(409, "Already disliked by user");
+      res.sendStatus(409);
     } else if (err.message === "Bad") {
       res.sendStatus(400);
     } else {
