@@ -4,7 +4,8 @@ const Meme = require("../models/memes");
 
 // Get 100 memes in reverse chronological order (Newest First)
 memesRouter.get("/memes", async (req, res) => {
-  const memes = await Meme.find({}).sort({ timestamp: -1 }).limit(100);
+  const projection = '_id name url caption'
+  const memes = await Meme.find().select(projection).sort({ timestamp: -1 }).limit(100);
   res.json(memes);
 });
 

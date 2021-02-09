@@ -29,11 +29,7 @@ memeSchema.set("toJSON", {
   versionKey: false,
   transform: function (doc, ret) {
     ret.id = ret._id;
-    delete ret.__v;
     delete ret._id;
-    delete ret.timestamp;
-    delete ret.likes;
-    delete ret.dislikes;
   },
 });
 

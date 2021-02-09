@@ -20,8 +20,8 @@ mongoose
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(memesRouter);
 app.use(likeDislikeRouter);
+app.use(memesRouter);
 
 // Starting server at port 8081
 app.listen(8081, () => {

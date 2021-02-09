@@ -2,6 +2,18 @@ const express = require("express");
 const likeDislikeRouter = express.Router();
 const Meme = require("../models/memes");
 
+likeDislikeRouter.get("/memes/likes", async (req, res) => {
+  try {
+    const projection = "_id likes";
+    const memes = await Meme.find({})
+      .select(projection)
+      .sort({ timestamp: -1 })
+      .limit(100);
+    res.json(memes);
+  } catch (err) {
+    res.send(err);
+  }
+});
 
 likeDislikeRouter.put("/memes/likes/:id", async (req, res) => {
   try {
@@ -60,11 +72,24 @@ likeDislikeRouter.get("/memes/likes/:id", async (req, res) => {
   }
 });
 
+likeDislikeRouter.get("/memes/dislikes", async (req, res) => {
+  try {
+    const projection = "_id dislikes";
+    const memes = await Meme.find({})
+      .select(projection)
+      .sort({ timestamp: -1 })
+      .limit(100);
+    res.json(memes);
+  } catch (err) {
+    res.send(err);
+  }
+});
+
 likeDislikeRouter.put("/memes/dislikes/:id", async (req, res) => {
   try {
     const meme = await Meme.findById(req.params.id);
     if (meme === null) {
-      throw new Error('Meme Not Found');
+      throw new Error("Meme Not Found");
     }
 
     if (meme.dislikes.includes(req.body.name)) {
