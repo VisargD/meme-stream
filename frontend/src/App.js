@@ -1,4 +1,4 @@
-import MemeList from "./components/MemeList";
+import MemeList from "./components/home/MemeList";
 import { MemeProvider } from "./context/MemeContext";
 
 function App() {

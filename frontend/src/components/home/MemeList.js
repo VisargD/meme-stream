@@ -1,30 +1,18 @@
 import React, { useContext, useState } from "react";
-import MemeForm from "./forms/MemeForm";
-import { MemeContext } from "../context/MemeContext";
+import MemeForm from "../forms/MemeForm";
+import { MemeContext } from "../../context/MemeContext";
 import axios from "axios";
-import { Button } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import Popup from "./controls/Popup";
-import EditForm from "./forms/EditForm";
-import LikeDislike from "./forms/LikeDislike";
+import Popup from "../controls/Popup";
+import EditForm from "../forms/EditForm";
+import LikeDislike from "../forms/LikeDislike";
 import Appbar from "./Appbar";
 
-import {
-  makeStyles,
-  Grid,
-  Container,
-  CardContent,
-  CardActions,
-  CardMedia,
-  Typography,
-  Card,
-} from "@material-ui/core";
+import { makeStyles, Grid, Container } from "@material-ui/core";
 
-import { failure, success } from "./controls/toast";
+import { failure, success } from "../controls/toast";
 import { ToastContainer } from "react-toastify";
-import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined";
-import ThumbDownOutlinedIcon from "@material-ui/icons/ThumbDownOutlined";
+
+import MemePost from "./MemeCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,76 +90,25 @@ export default function MemeList() {
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
           {memes.map((meme) => (
-            <Grid item key={meme.id} xs={12} sm={6} md={6}>
-              <Card className={classes.card}>
-                <CardMedia
-                  className={classes.cardMedia}
-                  image={meme.url}
-                  title={meme.caption}
-                />
-                <CardContent className={classes.cardContent}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    {meme.name}
-                  </Typography>
-                  <Typography>{meme.caption}</Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<DeleteIcon />}
-                    onClick={() => deleteHandler(meme.id)}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<EditIcon />}
-                    onClick={() => {
-                      setEditItem(meme);
-                      setFormType("edit");
-                      setOpenPopup(true);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="white"
-                    startIcon={<ThumbUpOutlinedIcon />}
-                    onClick={() => {
-                      setFormType("like");
-                      setOpenPopup(true);
-                      setLikeDislikeItem(
-                        likes.find((obj) => obj.id === meme.id)
-                      );
-                    }}
-                  >
-                    {likes.find((obj) => obj.id === meme.id)
-                      ? likes.find((obj) => obj.id === meme.id).likes.length
-                      : 0}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="white"
-                    startIcon={<ThumbDownOutlinedIcon />}
-                    onClick={() => {
-                      setFormType("dislike");
-                      setOpenPopup(true);
-                      setLikeDislikeItem(
-                        dislikes.find((obj) => obj.id === meme.id)
-                      );
-                    }}
-                  >
-                    {dislikes.find((obj) => obj.id === meme.id)
-                      ? dislikes.find((obj) => obj.id === meme.id).dislikes
-                          .length
-                      : 0}
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
+            <MemePost
+              onDeleteClick={() => deleteHandler(meme.id)}
+              memeItem={meme}
+              onEditClick={() => {
+                setEditItem(meme);
+                setFormType("edit");
+                setOpenPopup(true);
+              }}
+              onLikeClick={() => {
+                setFormType("like");
+                setOpenPopup(true);
+                setLikeDislikeItem(likes.find((obj) => obj.id === meme.id));
+              }}
+              onDislikeClick={() => {
+                setFormType("dislike");
+                setOpenPopup(true);
+                setLikeDislikeItem(dislikes.find((obj) => obj.id === meme.id));
+              }}
+            />
           ))}
         </Grid>
       </Container>
