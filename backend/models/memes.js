@@ -22,6 +22,9 @@ const memeSchema = new mongoose.Schema({
   dislikes: {
     type: Array,
   },
+  comments: {
+    type: Array,
+  }
 });
 
 memeSchema.set("toJSON", {

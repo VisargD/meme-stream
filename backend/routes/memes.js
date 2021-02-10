@@ -38,6 +38,7 @@ memesRouter.post("/memes", async (req, res) => {
         timestamp: new Date(),
         likes: [],
         dislikes: [],
+        comments: [],
       });
       await meme.save();
       res.json({ id: meme._id });

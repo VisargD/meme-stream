@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require("mongoose");
 const memesRouter = require("./routes/memes");
 const likeDislikeRouter = require("./routes/likeDislike");
+const commentsRouter = require("./routes/comments");
 
 // MongoDB connection establishment
 mongoose
@@ -21,6 +22,7 @@ mongoose
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(likeDislikeRouter);
+app.use(commentsRouter);
 app.use(memesRouter);
 
 // Starting server at port 8081
