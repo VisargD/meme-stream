@@ -2,13 +2,7 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { useState } from "react";
 import { MemeContext } from "../../context/MemeContext";
-import {
-  TextField,
-  Button,
-  makeStyles,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+import { TextField, Button, makeStyles, Grid } from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { failure } from "../controls/toast";
@@ -40,7 +34,6 @@ export default function LikeDislike(props) {
   const [likes, setLikes] = like;
   const [dislikes, setDislikes] = dislike;
   const [name, setName] = useState("");
-
 
   const submitHandler = async (e) => {
     try {
@@ -114,7 +107,7 @@ export default function LikeDislike(props) {
                     <Divider />
                   </>
                 );
-              })}          
+              })}
         </List>
       </form>
       <ToastContainer />

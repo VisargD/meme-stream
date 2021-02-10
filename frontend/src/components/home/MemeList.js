@@ -6,47 +6,19 @@ import Popup from "../controls/Popup";
 import EditForm from "../forms/EditForm";
 import LikeDislike from "../forms/LikeDislike";
 import Appbar from "./Appbar";
-
 import { makeStyles, Grid, Container } from "@material-ui/core";
-
 import { failure, success } from "../controls/toast";
 import { ToastContainer } from "react-toastify";
-
-import MemePost from "./MemeCard";
+import MemePost from "./MemePost";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  icon: {
-    marginRight: theme.spacing(2),
-  },
 
   cardGrid: {
     paddingTop: theme.spacing(8),
     paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    padding: theme.spacing(1),
-  },
-  cardMedia: {
-    paddingTop: "56.25%", // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
   },
 }));
 
