@@ -92,7 +92,7 @@ export default function MemeList() {
           ))}
         </Grid>
       </Container>
-      );
+
       {formType === "add" && (
         <Popup
           openPopup={openPopup}

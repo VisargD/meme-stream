@@ -3,6 +3,8 @@ import { MemeContext } from "../../context/MemeContext";
 import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import IconButton from "@material-ui/core/IconButton";
+
 import {
   makeStyles,
   Grid,
@@ -23,12 +25,17 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     padding: theme.spacing(1),
+    margin: theme.spacing(2),
   },
   cardMedia: {
     paddingTop: "56.25%", // 16:9
+    height: 0,
   },
   cardContent: {
     flexGrow: 1,
+  },
+  extendedIcon: {
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -64,22 +71,7 @@ export default function MemePost(props) {
         </CardContent>
         <CardActions>
           <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<DeleteIcon />}
-            onClick={onDeleteClick}
-          >
-            Delete
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<EditIcon />}
-            onClick={onEditClick}
-          >
-            Edit
-          </Button>
-          <Button
+            size="small"
             variant="contained"
             startIcon={<ThumbUpOutlinedIcon />}
             onClick={onLikeClick}
@@ -89,6 +81,7 @@ export default function MemePost(props) {
               : 0}
           </Button>
           <Button
+            size="small"
             variant="contained"
             startIcon={<ThumbDownOutlinedIcon />}
             onClick={onDislikeClick}
@@ -98,6 +91,7 @@ export default function MemePost(props) {
               : 0}
           </Button>
           <Button
+            size="small"
             variant="contained"
             startIcon={<ChatBubbleOutlineIcon />}
             onClick={onCommentClick}
@@ -105,6 +99,27 @@ export default function MemePost(props) {
             {comments.find((obj) => obj.id === memeItem.id)
               ? comments.find((obj) => obj.id === memeItem.id).comments.length
               : 0}
+          </Button>
+          </CardActions>
+          <CardActions>
+          <Button
+            variant="contained"    
+            color="secondary"  
+            size="small"      
+            startIcon={<DeleteIcon />}
+            onClick={onDeleteClick}            
+          >
+            Delete
+          </Button>
+          
+          <Button
+            variant="contained"    
+            color="primary"  
+            size="small"      
+            startIcon={<EditIcon />}
+            onClick={onEditClick}            
+          >
+            Edit
           </Button>
         </CardActions>
       </Card>

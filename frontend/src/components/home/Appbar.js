@@ -9,6 +9,12 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  Button: {
+    backgroundColor: "#fca311",
+  },
+  head: {
+    backgroundColor: "#03071e",
+  }
 }));
 
 export default function Appbar(props) {
@@ -17,16 +23,16 @@ export default function Appbar(props) {
 
   return (
     <div>
-      <AppBar position="fixed">
+      <AppBar position="fixed" className={classes.head}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Meme-Stream
           </Typography>
           <Button
-            variant="contained"
-            color="primary"
+            variant="contained"            
             startIcon={<AddIcon />}
             onClick={onClick}
+            className={classes.Button}
           >
             Add Meme
           </Button>
