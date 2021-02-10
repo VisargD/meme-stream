@@ -4,11 +4,11 @@ import { MemeContext } from "../context/MemeContext";
 import axios from "axios";
 import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import Popup from "./controls/Popup";
 import EditForm from "./forms/EditForm";
 import LikeDislike from "./forms/LikeDislike";
+import Appbar from "./Appbar";
 
 import {
   makeStyles,
@@ -21,8 +21,6 @@ import {
   Card,
 } from "@material-ui/core";
 
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import { failure, success } from "./controls/toast";
 import { ToastContainer } from "react-toastify";
 import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined";
@@ -95,24 +93,12 @@ export default function MemeList() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Meme-Stream
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<AddIcon />}
-            onClick={() => {
-              setFormType("add");
-              setOpenPopup(true);
-            }}
-          >
-            Add Meme
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Appbar
+        onClick={() => {
+          setFormType("add");
+          setOpenPopup(true);
+        }}
+      />
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
           {memes.map((meme) => (
