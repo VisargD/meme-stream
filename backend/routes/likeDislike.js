@@ -11,7 +11,7 @@ likeDislikeRouter.get("/memes/likes", async (req, res) => {
       .limit(100);
     res.json(memes);
   } catch (err) {
-    res.send(err);
+    res.sendStatus(500);
   }
 });
 
@@ -135,11 +135,15 @@ likeDislikeRouter.get("/memes/dislikes/:id", async (req, res) => {
   try {
     const meme = await Meme.findById(req.params.id);
     if (meme === null) {
-      throw new Error();
+      throw new Error("Not Found");
     }
     res.json({ total: meme.dislikes.length, dislikedBy: meme.dislikes });
   } catch (err) {
-    res.sendStatus(404);
+    if (err.message === "Not Found") {
+      res.sendStatus(404);
+    } else {
+      res.sendStatus(500);
+    }
   }
 });
 

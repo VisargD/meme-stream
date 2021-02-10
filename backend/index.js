@@ -25,6 +25,10 @@ app.use(likeDislikeRouter);
 app.use(commentsRouter);
 app.use(memesRouter);
 
+app.use((req, res, next) => {  
+  next(res.sendStatus(404));
+})
+
 // Starting server at port 8081
 app.listen(8081, () => {
   console.log("Server running on port 8081");

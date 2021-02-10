@@ -11,7 +11,7 @@ commentsRouter.get("/memes/comments", async (req, res) => {
       .limit(100);
     res.json(memes);
   } catch (err) {
-    res.send(err);
+    res.sendStatus(500);
   }
 });
 
@@ -19,10 +19,10 @@ commentsRouter.put("/memes/comments/:id", async (req, res) => {
   try {
     const meme = await Meme.findById(req.params.id);
     if (meme === null) {
-      throw new Error();
+      throw new Error("Not Found");
     }
 
-    if (req.body.name === null) {
+    if (req.body.name === null || req.body.name === "") {
       throw new Error("Bad");
     }
     if (req.body.comment === null || req.body.comment === "") {
@@ -41,8 +41,10 @@ commentsRouter.put("/memes/comments/:id", async (req, res) => {
   } catch (err) {
     if (err.message === "Bad") {
       res.sendStatus(400);
-    } else {
+    } else if (err.message === "Not Found") {
       res.sendStatus(404);
+    } else {
+      res.sendStatus(500);
     }
   }
 });
@@ -51,11 +53,16 @@ commentsRouter.get("/memes/comments/:id", async (req, res) => {
   try {
     const meme = await Meme.findById(req.params.id);
     if (meme === null) {
-      throw new Error();
+      throw new Error("Not Found");
     }
     res.json({ total: meme.comments.length, comments: meme.comments });
   } catch (err) {
-    res.sendStatus(404);
+    if (err.message === "Not Found") {
+      res.sendStatus(404);
+    } else {
+      res.sendStatus(500);
+    }
+    
   }
 });
 
