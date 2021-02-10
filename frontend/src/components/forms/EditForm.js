@@ -28,7 +28,6 @@ export default function EditForm(props) {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      await axios.get(url);
       const data = await axios.patch("/memes/" + editItem.id, { url, caption });
       const list = await axios.get("/memes");
       setMemes(list.data);
@@ -37,9 +36,7 @@ export default function EditForm(props) {
       setCaption("");
       afterSubmit();
     } catch (e) {
-      if (e.message === "Network Error") {
-        failure("Invalid Image URL due to CORS Policy");
-      } else if (e.response.status === 404) {
+      if (e.response.status === 404) {
         failure("Invalid Image URL");
       } else {
         failure("Duplicate Post");
@@ -87,6 +84,8 @@ export default function EditForm(props) {
         <Button variant="contained" color="primary" type="submit">
           Edit
         </Button>
+        <h2>Image Preview: </h2>
+        <img src={url} style={{ width: "100%", height: "auto" }} />
       </form>
     </div>
   );

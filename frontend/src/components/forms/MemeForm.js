@@ -33,7 +33,6 @@ export default function MemeForm(props) {
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      await axios.get(url, { crossdomain: true });
       const data = await axios.post("/memes", { name, url, caption });
       const list = await axios.get("/memes");
       const likeData = await axios.get("/memes/likes");
@@ -48,9 +47,7 @@ export default function MemeForm(props) {
       setCaption("");
       afterSubmit();
     } catch (e) {
-      if (e.message === "Network Error") {
-        failure("Invalid Image URL due to CORS Policy");
-      } else if (e.response.status === 404) {
+      if (e.response.status === 404) {
         failure("Invalid Image URL");
       } else {
         failure("Duplicate Post");
@@ -99,6 +96,8 @@ export default function MemeForm(props) {
           Submit
         </Button>
       </form>
+      <h2>Image Preview:</h2>
+      <img src={url} style={{ width: "100%", height: "auto" }} />
       <ToastContainer />
     </div>
   );
