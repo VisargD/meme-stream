@@ -52,14 +52,10 @@ export default function LikeDislike(props) {
       setDislikes(dislikeData.data);
       afterSubmit();
     } catch (e) {
-      if (e.response.status === 404) {
-        failure("Invalid Image URL");
+      if (type === "like") {
+        failure("Already liked by user");
       } else {
-        if (type === "like") {
-          failure("Already liked by user");
-        } else {
-          failure("Already disliked by user");
-        }
+        failure("Already disliked by user");
       }
     }
   };

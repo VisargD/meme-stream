@@ -6,6 +6,10 @@ import { TextField, Button, makeStyles, Grid } from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { failure } from "../controls/toast";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -16,45 +20,37 @@ const useStyle = makeStyles((theme) => ({
     "& Button": {
       margin: theme.spacing(1),
     },
+    "& .card": {
+      margin: theme.spacing(1),
+      padding: "0",
+    },
   },
 }));
 
-export default function MemeForm(props) {
-  const { meme, like, dislike, comment } = useContext(MemeContext);
+export default function CommentForm(props) {
+  const { afterSubmit, commentItem } = props;
+  const { meme, comment } = useContext(MemeContext);
   const [memes, setMemes] = meme;
-  const [likes, setLikes] = like;
-  const [dislikes, setDislikes] = dislike;
   const [comments, setComments] = comment;
   const [name, setName] = useState("");
-  const [url, setUrl] = useState("");
-  const [caption, setCaption] = useState("");
-  const { afterSubmit } = props;
+  const [commentValue, setCommentValue] = useState("");
 
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      await axios.get(url, { crossdomain: true });
-      const data = await axios.post("/memes", { name, url, caption });
-      const list = await axios.get("/memes");
-      const likeData = await axios.get("/memes/likes");
-      const dislikeData = await axios.get("/memes/dislikes");
+      const data = await axios.get("/memes");
+      await axios.put("/memes/comments/" + commentItem.id, {
+        name: name,
+        comment: commentValue,
+      });
       const commentData = await axios.get("/memes/comments");
-      setMemes(list.data);
-      setLikes(likeData.data);
-      setDislikes(dislikeData.data);
+      setMemes(data.data);
       setComments(commentData.data);
       setName("");
-      setUrl("");
-      setCaption("");
+      setCommentValue("");
       afterSubmit();
     } catch (e) {
-      if (e.message === "Network Error") {
-        failure("Invalid Image URL due to CORS Policy");
-      } else if (e.response.status === 404) {
-        failure("Invalid Image URL");
-      } else {
-        failure("Duplicate Post");
-      }
+      failure("Error!");
     }
   };
 
@@ -73,24 +69,13 @@ export default function MemeForm(props) {
             onChange={(e) => setName(e.target.value)}
             required
           />
-
           <TextField
             id="outlined-basic"
-            name="url"
-            label="URL"
+            name="name"
+            label="Comment"
             variant="outlined"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            required
-          />
-
-          <TextField
-            id="outlined-basic"
-            name="caption"
-            label="Caption"
-            variant="outlined"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
+            value={commentValue}
+            onChange={(e) => setCommentValue(e.target.value)}
             required
           />
         </Grid>
@@ -98,6 +83,23 @@ export default function MemeForm(props) {
         <Button variant="contained" color="primary" type="submit">
           Submit
         </Button>
+
+        <h2>Comments:</h2>
+        <List>
+          {commentItem.comments.map((item) => {
+            return (
+              <>
+                <ListItem>
+                  <ListItemText primary={item.name} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText secondary={item.comment} />
+                </ListItem>
+                <Divider />
+              </>
+            );
+          })}
+        </List>
       </form>
       <ToastContainer />
     </div>

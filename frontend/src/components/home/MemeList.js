@@ -10,6 +10,7 @@ import { makeStyles, Grid, Container } from "@material-ui/core";
 import { failure, success } from "../controls/toast";
 import { ToastContainer } from "react-toastify";
 import MemePost from "./MemePost";
+import CommentForm from "../forms/CommentForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,13 +24,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MemeList() {
-  const { meme, like, dislike } = useContext(MemeContext);
+  const { meme, like, dislike, comment } = useContext(MemeContext);
   const [memes, setMemes] = meme;
   const [likes, setLikes] = like;
   const [dislikes, setDislikes] = dislike;
+  const [comments, setComments] = comment;
   const [openPopup, setOpenPopup] = useState(false);
   const [editItem, setEditItem] = useState({});
   const [likeDislikeItem, setLikeDislikeItem] = useState({});
+  const [commentItem, setCommentItem] = useState({});
 
   const classes = useStyles();
   const [formType, setFormType] = useState("");
@@ -79,6 +82,11 @@ export default function MemeList() {
                 setFormType("dislike");
                 setOpenPopup(true);
                 setLikeDislikeItem(dislikes.find((obj) => obj.id === meme.id));
+              }}
+              onCommentClick={() => {
+                setFormType("comment");
+                setOpenPopup(true);
+                setCommentItem(comments.find((obj) => obj.id === meme.id));
               }}
             />
           ))}
@@ -135,6 +143,19 @@ export default function MemeList() {
             afterSubmit={() => afterSubmit("Disliked by user!!")}
             likeDislikeItem={likeDislikeItem}
             type={formType}
+          />{" "}
+        </Popup>
+      )}
+      {formType === "comment" && (
+        <Popup
+          openPopup={openPopup}
+          setOpenPopup={setOpenPopup}
+          title="Add Comment"
+        >
+          {" "}
+          <CommentForm
+            afterSubmit={() => afterSubmit("Comment Added Successfully!!")}
+            commentItem={commentItem}
           />{" "}
         </Popup>
       )}

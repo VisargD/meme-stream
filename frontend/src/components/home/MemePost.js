@@ -15,6 +15,7 @@ import {
 
 import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@material-ui/icons/ThumbDownOutlined";
+import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -38,15 +39,17 @@ export default function MemePost(props) {
     onEditClick,
     onLikeClick,
     onDislikeClick,
+    onCommentClick,
   } = props;
-  const { meme, like, dislike } = useContext(MemeContext);
+  const { like, dislike, comment } = useContext(MemeContext);
   const [likes, setLikes] = like;
   const [dislikes, setDislikes] = dislike;
+  const [comments, setComments] = comment;
 
   const classes = useStyles();
 
   return (
-    <Grid item key={meme.id} xs={12} sm={6} md={6}>
+    <Grid item key={memeItem.id} xs={12} sm={6} md={6}>
       <Card className={classes.card}>
         <CardMedia
           className={classes.cardMedia}
@@ -92,6 +95,15 @@ export default function MemePost(props) {
           >
             {dislikes.find((obj) => obj.id === memeItem.id)
               ? dislikes.find((obj) => obj.id === memeItem.id).dislikes.length
+              : 0}
+          </Button>
+          <Button
+            variant="contained"
+            startIcon={<ChatBubbleOutlineIcon />}
+            onClick={onCommentClick}
+          >
+            {comments.find((obj) => obj.id === memeItem.id)
+              ? comments.find((obj) => obj.id === memeItem.id).comments.length
               : 0}
           </Button>
         </CardActions>
