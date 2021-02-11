@@ -1,14 +1,14 @@
 const express = require("express");
 const likeDislikeRouter = express.Router();
 const Meme = require("../models/memes");
-
+const checkId = require("../helpers/checkId");
+const checkError = require("../helpers/checkError");
 /**
  * @swagger
  * tags:
  *   name: LikeDislike
  *   description: The Like/Dislike Manager
  */
-
 
 /**
  * @swagger
@@ -20,7 +20,7 @@ const Meme = require("../models/memes");
  *      '200':
  *        description: OK. Returns a JSON response containing id and likes list containing usernames.
  *      '500':
- *        description: Internal Server Error due to Database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 likeDislikeRouter.get("/likes", async (req, res) => {
   try {
@@ -60,25 +60,24 @@ likeDislikeRouter.get("/likes", async (req, res) => {
  *      '200':
  *        description: OK. Post Successfully liked by the mentioned user
  *      '409':
- *        description: Conflict. Post already liked by the mentioned user
+ *        description: CONFLICT. Post already liked by the mentioned user
  *      '404':
  *        description: NOT FOUND. ID not found
  *      '400':
- *        description: Bad Request. The given name is either null or empty
+ *        description: BAD REQUEST. The given name is either null or empty
+ *      '500':
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
 likeDislikeRouter.put("/likes/:id", async (req, res) => {
   try {
-    const meme = await Meme.findById(req.params.id);
-    if (meme === null) {
-      throw new Error();
+    if (req.body.name === null || req.body.name === "") {
+      throw new Error("Bad Request");
     }
+
+    checkId(req.params.id);
 
     if (meme.likes.includes(req.body.name)) {
       throw new Error("Duplicate");
-    }
-
-    if (req.body.name === null || req.body.name === "") {
-      throw new Error("Bad");
     }
 
     if (meme.dislikes.includes(req.body.name)) {
@@ -101,13 +100,7 @@ likeDislikeRouter.put("/likes/:id", async (req, res) => {
     );
     res.sendStatus(200);
   } catch (err) {
-    if (err.message === "Duplicate") {
-      res.sendStatus(409);
-    } else if (err.message === "Bad") {
-      res.sendStatus(400);
-    } else {
-      res.sendStatus(404);
-    }
+    checkError(err, res);
   }
 });
 
@@ -123,26 +116,19 @@ likeDislikeRouter.put("/likes/:id", async (req, res) => {
  *      description: ID of the Meme post
  *    responses:
  *      '200':
- *        description: OK. Returns a JSON response containing total likes count and 
+ *        description: OK. Returns a JSON response containing total likes count and
  *                     likes list containing usernames.
  *      '404':
  *        description: NOT FOUND. ID not found
  *      '500':
- *        description: Internal Server Error due to database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
 likeDislikeRouter.get("/likes/:id", async (req, res) => {
   try {
-    const meme = await Meme.findById(req.params.id);
-    if (meme === null) {
-      throw new Error("Not found");
-    }
+    const meme = await checkId(req.params.id);
     res.json({ total: meme.likes.length, likedBy: meme.likes });
   } catch (err) {
-    if (err.message === "Not Found") {
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(500);
-    }
+    checkError(err, res);
   }
 });
 
@@ -156,7 +142,7 @@ likeDislikeRouter.get("/likes/:id", async (req, res) => {
  *      '200':
  *        description: OK. Returns a JSON response containing id and dislikes list containing usernames.
  *      '500':
- *        description: Internal Server Error due to Database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
 likeDislikeRouter.get("/dislikes", async (req, res) => {
   try {
@@ -167,7 +153,7 @@ likeDislikeRouter.get("/dislikes", async (req, res) => {
       .limit(100);
     res.json(memes);
   } catch (err) {
-    res.send(err);
+    res.sendStatus(500);
   }
 });
 
@@ -175,7 +161,7 @@ likeDislikeRouter.get("/dislikes", async (req, res) => {
  * @swagger
  * /dislikes/{id}:
  *  put:
- *    description: Add a dislike to a post using ID. 
+ *    description: Add a dislike to a post using ID.
  *                 If the user liked the post then it is removed and a dislike is added instead.
  *    tags: [LikeDislike]
  *    parameters:
@@ -201,20 +187,18 @@ likeDislikeRouter.get("/dislikes", async (req, res) => {
  *        description: NOT FOUND. ID not found
  *      '400':
  *        description: Bad Request. The given name is either null or empty
+ *      '500':
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
 likeDislikeRouter.put("/dislikes/:id", async (req, res) => {
   try {
-    const meme = await Meme.findById(req.params.id);
-    if (meme === null) {
-      throw new Error("Meme Not Found");
+    if (req.body.name === null || req.body.name === "") {
+      throw new Error("Bad Request");
     }
+    const meme = await checkId(req.params.id);
 
     if (meme.dislikes.includes(req.body.name)) {
       throw new Error("Duplicate");
-    }
-
-    if (req.body.name === null) {
-      throw new Error("Bad");
     }
 
     if (meme.likes.includes(req.body.name)) {
@@ -238,13 +222,7 @@ likeDislikeRouter.put("/dislikes/:id", async (req, res) => {
     );
     res.sendStatus(200);
   } catch (err) {
-    if (err.message === "Duplicate") {
-      res.sendStatus(409);
-    } else if (err.message === "Bad") {
-      res.sendStatus(400);
-    } else {
-      res.sendStatus(404);
-    }
+    checkError(err, res);
   }
 });
 
@@ -260,26 +238,19 @@ likeDislikeRouter.put("/dislikes/:id", async (req, res) => {
  *      description: ID of the Meme post
  *    responses:
  *      '200':
- *        description: OK. Returns a JSON response containing total dislikes count and 
+ *        description: OK. Returns a JSON response containing total dislikes count and
  *                     dislikes list containing usernames.
  *      '404':
  *        description: NOT FOUND. ID not found
  *      '500':
- *        description: Internal Server Error due to database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
 likeDislikeRouter.get("/dislikes/:id", async (req, res) => {
   try {
-    const meme = await Meme.findById(req.params.id);
-    if (meme === null) {
-      throw new Error("Not Found");
-    }
+    const meme = checkId(req.params.id);
     res.json({ total: meme.dislikes.length, dislikedBy: meme.dislikes });
   } catch (err) {
-    if (err.message === "Not Found") {
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(500);
-    }
+    checkError(err, res);
   }
 });
 

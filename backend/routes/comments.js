@@ -1,7 +1,8 @@
 const express = require("express");
 const commentsRouter = express.Router();
 const Meme = require("../models/memes");
-
+const checkError = require("../helpers/checkError");
+const checkId = require("../helpers/checkId");
 
 /**
  * @swagger
@@ -9,7 +10,6 @@ const Meme = require("../models/memes");
  *   name: Comments
  *   description: The Comments Manager
  */
-
 
 /**
  * @swagger
@@ -19,10 +19,10 @@ const Meme = require("../models/memes");
  *    tags: [Comments]
  *    responses:
  *      '200':
- *        description: OK. Returns a JSON response containing id and 
+ *        description: OK. Returns a JSON response containing id and
  *                     comments list containing username and comment.
  *      '500':
- *        description: Internal Server Error due to Database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 commentsRouter.get("/comments", async (req, res) => {
   try {
@@ -65,26 +65,22 @@ commentsRouter.get("/comments", async (req, res) => {
  *    responses:
  *      '200':
  *        description: OK. Post Successfully liked by the mentioned user
- *      '500':
- *        description: Internal Server Error due to database connectivity
  *      '404':
  *        description: NOT FOUND. ID not found
  *      '400':
- *        description: Bad Request. The given name and/or comment is either null or empty
+ *        description: BAD REQUEST. The given name and/or comment is either null or empty
+ *      '500':
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 commentsRouter.put("/comments/:id", async (req, res) => {
   try {
-    const meme = await Meme.findById(req.params.id);
-    if (meme === null) {
-      throw new Error("Not Found");
-    }
-
     if (req.body.name === null || req.body.name === "") {
-      throw new Error("Bad");
+      throw new Error("Bad Request");
     }
     if (req.body.comment === null || req.body.comment === "") {
-      throw new Error("Bad");
+      throw new Error("Bad Request");
     }
+    await checkId(req.params.id);
 
     await Meme.updateOne(
       { _id: req.params.id },
@@ -96,13 +92,7 @@ commentsRouter.put("/comments/:id", async (req, res) => {
     );
     res.sendStatus(200);
   } catch (err) {
-    if (err.message === "Bad") {
-      res.sendStatus(400);
-    } else if (err.message === "Not Found") {
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(500);
-    }
+    checkError(err, res);
   }
 });
 
@@ -118,27 +108,19 @@ commentsRouter.put("/comments/:id", async (req, res) => {
  *      description: ID of the Meme post
  *    responses:
  *      '200':
- *        description: OK. Returns a JSON response containing total comment count and 
+ *        description: OK. Returns a JSON response containing total comment count and
  *                     comments list containing username and comment.
  *      '404':
  *        description: NOT FOUND. ID not found
  *      '500':
- *        description: Internal Server Error due to database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 commentsRouter.get("/comments/:id", async (req, res) => {
   try {
-    const meme = await Meme.findById(req.params.id);
-    if (meme === null) {
-      throw new Error("Not Found");
-    }
+    const meme = await checkId(req.params.id);
     res.json({ total: meme.comments.length, comments: meme.comments });
   } catch (err) {
-    if (err.message === "Not Found") {
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(500);
-    }
-    
+    checkError(err, res);
   }
 });
 

@@ -2,6 +2,8 @@ const express = require("express");
 const memesRouter = express.Router();
 const Meme = require("../models/memes");
 const isImageURL = require("image-url-validator").default;
+const checkError = require("../helpers/checkError");
+const checkId = require("../helpers/checkId");
 
 /**
  * @swagger
@@ -10,7 +12,6 @@ const isImageURL = require("image-url-validator").default;
  *   description: The Meme Post manager
  */
 
-// Routes
 /**
  * @swagger
  * /memes:
@@ -21,7 +22,7 @@ const isImageURL = require("image-url-validator").default;
  *      '200':
  *        description: OK. Meme Posts fetched successfully
  *      '500':
- *        description: Internal Server Error due to Database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 
 memesRouter.get("/memes", async (req, res) => {
@@ -53,22 +54,19 @@ memesRouter.get("/memes", async (req, res) => {
  *      '404':
  *        description: NOT FOUND. ID not found
  *      '500':
- *        description: Internal Server Error due to Database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 memesRouter.get("/memes/:id", async (req, res) => {
   try {
-    const projection = "_id name url caption";
-    const meme = await Meme.findById(req.params.id).select(projection);
-    if (meme === null) {
-      throw new Error("Not Found");
-    }
-    res.json(meme);
+    const meme = await checkId(req.params.id);
+    res.json({
+      id: meme._id,
+      name: meme.name,
+      url: meme.url,
+      caption: meme.caption,
+    });
   } catch (err) {
-    if (err.message === "Not Found") {
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(500);
-    }
+    checkError(err, res);
   }
 });
 
@@ -106,14 +104,10 @@ memesRouter.get("/memes/:id", async (req, res) => {
  *      '400':
  *        description: BAD REQUEST. The body contains null or empty values
  *      '500':
- *        description: Internal Server Error due to Database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
 memesRouter.post("/memes", async (req, res) => {
   try {
-    if (!(await isImageURL(req.params.url))) {
-      throw new Error("Invalid URL");
-    }
-
     if (
       req.body.name === null ||
       req.body.ur === null ||
@@ -124,6 +118,10 @@ memesRouter.post("/memes", async (req, res) => {
     if (req.body.name === "" || req.body.ur === "" || req.body.caption === "") {
       throw new Error("Bad Request");
     }
+    if (!(await isImageURL(req.params.url))) {
+      throw new Error("Invalid URL");
+    }
+
     const found = await Meme.find({
       $and: [
         { name: req.body.name },
@@ -145,15 +143,7 @@ memesRouter.post("/memes", async (req, res) => {
       throw new Error("Duplicate");
     }
   } catch (err) {
-    if (err.message === "Duplicate") {
-      res.sendStatus(409);
-    } else if (err.message === "Invalid URL") {
-      res.sendStatus(422);
-    } else if (err.message === "Bad Request") {
-      res.sendStatus(400);
-    } else {
-      res.sendStatus(500);
-    }
+    checkError(err, res);
   }
 });
 
@@ -172,13 +162,16 @@ memesRouter.post("/memes", async (req, res) => {
  *        description: OK. Post Deleted Successfully
  *      '404':
  *        description: NOT FOUND. ID not found
+ *      '500':
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 memesRouter.delete("/memes/:id", async (req, res) => {
   try {
+    await checkId(req.params.id);
     const del = await Meme.deleteOne({ _id: req.params.id });
     res.sendStatus(200);
   } catch (err) {
-    res.sendStatus(404);
+    checkError(err, res);
   }
 });
 
@@ -218,21 +211,20 @@ memesRouter.delete("/memes/:id", async (req, res) => {
  *      '400':
  *        description: BAD REQUEST. The body contains null or empty values
  *      '500':
- *        description: Internal Server Error due to Database connectivity
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
 memesRouter.patch("/memes/:id", async (req, res) => {
   try {
-    if (!(await isImageURL(req.params.url))) {
+    if (req.body.url === null || req.body.caption === null) {
+      throw new Error("Bad Request");
+    }
+    if (req.body.url === "" || req.body.caption === "") {
+      throw new Error("Bad Request");
+    }
+    const meme = await checkId(req.params.id);
+
+    if (!(await isImageURL(req.body.url))) {
       throw new Error("Invalid URL");
-    }
-    if (req.body.ur === null || req.body.caption === null) {
-      throw new Error("Bad Request");
-    }
-    if (req.body.ur === "" || req.body.caption === "") {
-      throw new Error("Bad Request");
-    }
-    if (!(await Meme.findById(req.params.id))) {
-      throw new Error("Not Found");
     }
     const found = await Meme.find({
       $and: [
@@ -256,17 +248,7 @@ memesRouter.patch("/memes/:id", async (req, res) => {
     );
     res.sendStatus(200);
   } catch (err) {
-    if (err.message === "Duplicate") {
-      res.sendStatus(409);
-    } else if (err.message === "Invalid URL") {
-      res.sendStatus(422);
-    } else if (err.message === "Bad Request") {
-      res.sendStatus(400);
-    } else if (err.message === "Not Found") {
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(500);
-    }
+    checkError(err, res);
   }
 });
 
