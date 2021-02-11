@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd meme-stream/backend
+cd backend
 
 npm install
 
