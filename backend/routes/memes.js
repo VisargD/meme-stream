@@ -1,6 +1,7 @@
 const express = require("express");
 const memesRouter = express.Router();
 const Meme = require("../models/memes");
+const isImageURL = require("image-url-validator").default;
 
 /**
  * @swagger
@@ -99,12 +100,30 @@ memesRouter.get("/memes/:id", async (req, res) => {
  *      '200':
  *        description: OK. Returns a JSON response containing id.
  *      '409':
- *        description: Duplicate post by the same user
+ *        description: CONFLICT. Duplicate post by the same user
+ *      '422':
+ *        description: UNPROCESSABLE ENTITY. Invalid image URL.
+ *      '400':
+ *        description: BAD REQUEST. The body contains null or empty values
  *      '500':
  *        description: Internal Server Error due to Database connectivity
  */
 memesRouter.post("/memes", async (req, res) => {
   try {
+    if (!(await isImageURL(req.params.url))) {
+      throw new Error("Invalid URL");
+    }
+
+    if (
+      req.body.name === null ||
+      req.body.ur === null ||
+      req.body.caption === null
+    ) {
+      throw new Error("Bad Request");
+    }
+    if (req.body.name === "" || req.body.ur === "" || req.body.caption === "") {
+      throw new Error("Bad Request");
+    }
     const found = await Meme.find({
       $and: [
         { name: req.body.name },
@@ -128,6 +147,10 @@ memesRouter.post("/memes", async (req, res) => {
   } catch (err) {
     if (err.message === "Duplicate") {
       res.sendStatus(409);
+    } else if (err.message === "Invalid URL") {
+      res.sendStatus(422);
+    } else if (err.message === "Bad Request") {
+      res.sendStatus(400);
     } else {
       res.sendStatus(500);
     }
@@ -190,10 +213,27 @@ memesRouter.delete("/memes/:id", async (req, res) => {
  *        description: CONFLICT. Duplicate post by the same user
  *      '404':
  *        description: NOT FOUND. ID not found
+ *      '422':
+ *        description: UNPROCESSABLE ENTITY. Invalid image URL.
+ *      '400':
+ *        description: BAD REQUEST. The body contains null or empty values
+ *      '500':
+ *        description: Internal Server Error due to Database connectivity
  */
 memesRouter.patch("/memes/:id", async (req, res) => {
   try {
-    const meme = await Meme.findById(req.params.id);
+    if (!(await isImageURL(req.params.url))) {
+      throw new Error("Invalid URL");
+    }
+    if (req.body.ur === null || req.body.caption === null) {
+      throw new Error("Bad Request");
+    }
+    if (req.body.ur === "" || req.body.caption === "") {
+      throw new Error("Bad Request");
+    }
+    if (!(await Meme.findById(req.params.id))) {
+      throw new Error("Not Found");
+    }
     const found = await Meme.find({
       $and: [
         { url: req.body.url },
@@ -218,8 +258,14 @@ memesRouter.patch("/memes/:id", async (req, res) => {
   } catch (err) {
     if (err.message === "Duplicate") {
       res.sendStatus(409);
-    } else {
+    } else if (err.message === "Invalid URL") {
+      res.sendStatus(422);
+    } else if (err.message === "Bad Request") {
+      res.sendStatus(400);
+    } else if (err.message === "Not Found") {
       res.sendStatus(404);
+    } else {
+      res.sendStatus(500);
     }
   }
 });
