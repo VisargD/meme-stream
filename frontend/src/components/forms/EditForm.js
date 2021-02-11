@@ -36,7 +36,7 @@ export default function EditForm(props) {
       setCaption("");
       afterSubmit();
     } catch (e) {
-      if (e.response.status === 404) {
+      if (e.response.status === 422) {
         failure("Invalid Image URL");
       } else {
         failure("Duplicate Post");

@@ -52,7 +52,9 @@ export default function LikeDislike(props) {
       setDislikes(dislikeData.data);
       afterSubmit();
     } catch (e) {
-      if (type === "like") {
+      if (e.response.status === 403) {
+        failure("Cannot be liked/disliked by the owner");
+      } else if (type === "like") {
         failure("Already liked by user");
       } else {
         failure("Already disliked by user");

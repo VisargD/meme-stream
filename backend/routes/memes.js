@@ -118,7 +118,7 @@ memesRouter.post("/memes", async (req, res) => {
     if (req.body.name === "" || req.body.ur === "" || req.body.caption === "") {
       throw new Error("Bad Request");
     }
-    if (!(await isImageURL(req.params.url))) {
+    if (!(await isImageURL(req.body.url))) {
       throw new Error("Invalid URL");
     }
 
