@@ -7,8 +7,9 @@ const checkError = (err, res) => {
     res.sendStatus(400);
   } else if (err.message === "Not Found") {
     res.sendStatus(404);
-  } else {
-    res.send(err.message);
+  } else if (err.message === "Forbidden") {
+    res.sendStatus(403);
+  }else {
     res.sendStatus(500);
   }
 };

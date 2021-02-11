@@ -65,6 +65,8 @@ likeDislikeRouter.get("/likes", async (req, res) => {
  *        description: NOT FOUND. ID not found
  *      '400':
  *        description: BAD REQUEST. The given name is either null or empty
+ *      '403':
+ *        description: FORBIDDEN. Owner trying to like their own post
  *      '500':
  *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
@@ -74,7 +76,10 @@ likeDislikeRouter.put("/likes/:id", async (req, res) => {
       throw new Error("Bad Request");
     }
 
-    checkId(req.params.id);
+    const meme = await checkId(req.params.id);
+    if (req.body.name === meme.name) {
+      throw new Error("Forbidden");
+    }
 
     if (meme.likes.includes(req.body.name)) {
       throw new Error("Duplicate");
@@ -187,6 +192,8 @@ likeDislikeRouter.get("/dislikes", async (req, res) => {
  *        description: NOT FOUND. ID not found
  *      '400':
  *        description: Bad Request. The given name is either null or empty
+ *      '403':
+ *        description: FORBIDDEN. Owner trying to dislike their own post
  *      '500':
  *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */
@@ -197,6 +204,9 @@ likeDislikeRouter.put("/dislikes/:id", async (req, res) => {
     }
     const meme = await checkId(req.params.id);
 
+    if (req.body.name === meme.name) {
+      throw new Error("Forbidden");
+    }
     if (meme.dislikes.includes(req.body.name)) {
       throw new Error("Duplicate");
     }
