@@ -35,9 +35,9 @@ export default function MemeForm(props) {
       e.preventDefault();
       const data = await axios.post("/memes", { name, url, caption });
       const list = await axios.get("/memes");
-      const likeData = await axios.get("/memes/likes");
-      const dislikeData = await axios.get("/memes/dislikes");
-      const commentData = await axios.get("/memes/comments");
+      const likeData = await axios.get("/likes");
+      const dislikeData = await axios.get("/dislikes");
+      const commentData = await axios.get("/comments");
       setMemes(list.data);
       setLikes(likeData.data);
       setDislikes(dislikeData.data);

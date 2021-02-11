@@ -39,11 +39,11 @@ export default function CommentForm(props) {
     try {
       e.preventDefault();
       const data = await axios.get("/memes");
-      await axios.put("/memes/comments/" + commentItem.id, {
+      await axios.put("/comments/" + commentItem.id, {
         name: name,
         comment: commentValue,
       });
-      const commentData = await axios.get("/memes/comments");
+      const commentData = await axios.get("/comments");
       setMemes(data.data);
       setComments(commentData.data);
       setName("");

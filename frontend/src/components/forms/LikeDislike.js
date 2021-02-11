@@ -39,13 +39,13 @@ export default function LikeDislike(props) {
     try {
       e.preventDefault();
       if (type === "like") {
-        await axios.put("/memes/likes/" + likeDislikeItem.id, { name });
+        await axios.put("/likes/" + likeDislikeItem.id, { name });
       } else {
-        await axios.put("/memes/dislikes/" + likeDislikeItem.id, { name });
+        await axios.put("/dislikes/" + likeDislikeItem.id, { name });
       }
       const data = await axios.get("/memes");
-      const likeData = await axios.get("/memes/likes");
-      const dislikeData = await axios.get("/memes/dislikes");
+      const likeData = await axios.get("/likes");
+      const dislikeData = await axios.get("/dislikes");
       setMemes(data.data);
       setName("");
       setLikes(likeData.data);

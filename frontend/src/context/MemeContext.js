@@ -11,9 +11,9 @@ export const MemeProvider = (props) => {
 
   useEffect(async () => {
     const data = await axios.get("/memes");
-    const likeData = await axios.get("/memes/likes");
-    const dislikeData = await axios.get("/memes/dislikes"); 
-    const commentsData = await axios.get("/memes/comments");   
+    const likeData = await axios.get("/likes");
+    const dislikeData = await axios.get("/dislikes"); 
+    const commentsData = await axios.get("/comments");   
     setMemes(data.data);
     setLikes(likeData.data);
     setDislikes(dislikeData.data);
