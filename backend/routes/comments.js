@@ -2,7 +2,29 @@ const express = require("express");
 const commentsRouter = express.Router();
 const Meme = require("../models/memes");
 
-commentsRouter.get("/memes/comments", async (req, res) => {
+
+/**
+ * @swagger
+ * tags:
+ *   name: Comments
+ *   description: The Comments Manager
+ */
+
+
+/**
+ * @swagger
+ * /comments:
+ *  get:
+ *    description: Get the Comment data for the recent 100 posts
+ *    tags: [Comments]
+ *    responses:
+ *      '200':
+ *        description: OK. Returns a JSON response containing id and 
+ *                     comments list containing username and comment.
+ *      '500':
+ *        description: Internal Server Error due to Database connectivity
+ */
+commentsRouter.get("/comments", async (req, res) => {
   try {
     const projection = "_id comments";
     const memes = await Meme.find({})
@@ -15,7 +37,42 @@ commentsRouter.get("/memes/comments", async (req, res) => {
   }
 });
 
-commentsRouter.put("/memes/comments/:id", async (req, res) => {
+/**
+ * @swagger
+ * /comments/{id}:
+ *  put:
+ *    description: Add a comment to a post using ID.
+ *                 It takes a username and a comment in the request body.
+ *    tags: [Comments]
+ *    parameters:
+ *    - in: path
+ *      name: id
+ *      description: ID of the Meme post
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *                description: Name of the user
+ *                example: 'User1'
+ *              comment:
+ *                type: string
+ *                description: Comment done by the user
+ *                example: 'Random Comment'
+ *    responses:
+ *      '200':
+ *        description: OK. Post Successfully liked by the mentioned user
+ *      '500':
+ *        description: Internal Server Error due to database connectivity
+ *      '404':
+ *        description: NOT FOUND. ID not found
+ *      '400':
+ *        description: Bad Request. The given name and/or comment is either null or empty
+ */
+commentsRouter.put("/comments/:id", async (req, res) => {
   try {
     const meme = await Meme.findById(req.params.id);
     if (meme === null) {
@@ -49,7 +106,26 @@ commentsRouter.put("/memes/comments/:id", async (req, res) => {
   }
 });
 
-commentsRouter.get("/memes/comments/:id", async (req, res) => {
+/**
+ * @swagger
+ * /comments/{id}:
+ *  get:
+ *    description: Get the Comment data of a post using ID
+ *    tags: [Comments]
+ *    parameters:
+ *    - in: path
+ *      name: id
+ *      description: ID of the Meme post
+ *    responses:
+ *      '200':
+ *        description: OK. Returns a JSON response containing total comment count and 
+ *                     comments list containing username and comment.
+ *      '404':
+ *        description: NOT FOUND. ID not found
+ *      '500':
+ *        description: Internal Server Error due to database connectivity
+ */
+commentsRouter.get("/comments/:id", async (req, res) => {
   try {
     const meme = await Meme.findById(req.params.id);
     if (meme === null) {
