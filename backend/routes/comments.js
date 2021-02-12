@@ -29,9 +29,9 @@ commentsRouter.get("/comments", async (req, res) => {
   try {
     const projection = "_id comments";
     const memes = await Meme.find({})
-      .select(projection)
       .sort({ timestamp: -1 })
-      .limit(100);
+      .limit(100)
+      .select(projection);
     res.json(memes);
   } catch (err) {
     res.sendStatus(500);

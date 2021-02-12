@@ -17,7 +17,7 @@ const mongoose = require("mongoose");
  *           type: string
  *           description: URL of the image used in the post
  *         timestamp:
- *           type: date
+ *           type: number
  *           description: Timestamp of creation
  *         likes:
  *           type: array
@@ -43,7 +43,7 @@ const memeSchema = new mongoose.Schema({
     required: true,
   },
   timestamp: {
-    type: Date,
+    type: Number,
   },
   likes: {
     type: Array,
@@ -66,5 +66,5 @@ memeSchema.set("toJSON", {
 });
 
 const Meme = mongoose.model("Meme", memeSchema);
-
+Meme.createIndexes({timestamp: 1})
 module.exports = Meme;

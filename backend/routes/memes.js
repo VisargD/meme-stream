@@ -30,10 +30,10 @@ const checkId = require("../helpers/checkId");
 memesRouter.get("/memes", async (req, res) => {
   try {
     const projection = "_id name url caption";
-    const memes = await Meme.find()
-      .select(projection)
+    const memes = await Meme.find()      
       .sort({ timestamp: -1 })
-      .limit(100);
+      .limit(100)
+      .select(projection);
     res.json(memes);
   } catch (err) {
     res.sendStatus(500);
@@ -57,7 +57,7 @@ memesRouter.get("/memes", async (req, res) => {
 
 memesRouter.get("/memes/all", async (req, res) => {
   try {
-    const memes = await Meme.find().sort({ timestamp: -1 });
+    const memes = await Meme.find().sort({ timestamp: -1 }).limit(100);
     res.json(memes);
   } catch (err) {
     res.sendStatus(500);
@@ -158,7 +158,7 @@ memesRouter.post("/memes", async (req, res) => {
     if (found.length === 0) {
       const meme = new Meme({
         ...req.body,
-        timestamp: new Date(),
+        timestamp: Date.now(),
         likes: [],
         dislikes: [],
         comments: [],
