@@ -21,6 +21,7 @@ const checkId = require("../helpers/checkId");
  *      '200':
  *        description: OK. Returns a JSON response containing id and
  *                     comments list containing username and comment.
+ *                     Returns empty list if there are no posts.
  *      '500':
  *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */

@@ -19,6 +19,7 @@ const checkError = require("../helpers/checkError");
  *    responses:
  *      '200':
  *        description: OK. Returns a JSON response containing id and likes list containing usernames.
+ *                     Returns empty list if there are no posts.
  *      '500':
  *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
@@ -146,6 +147,7 @@ likeDislikeRouter.get("/likes/:id", async (req, res) => {
  *    responses:
  *      '200':
  *        description: OK. Returns a JSON response containing id and dislikes list containing usernames.
+ *                     Returns empty list if there are no posts.
  *      '500':
  *        description: INTERNAL SERVER ERROR. Cannot perform operation.
  */

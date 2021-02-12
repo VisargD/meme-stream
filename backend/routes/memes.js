@@ -20,7 +20,9 @@ const checkId = require("../helpers/checkId");
  *    tags: [Memes]
  *    responses:
  *      '200':
- *        description: OK. Meme Posts fetched successfully
+ *        description: OK. Meme Posts fetched successfully. Returns a JSON Response 
+ *                     which contains list of {id, name, url and caption}. Returns 
+ *                     empty array if there are no posts.
  *      '500':
  *        description: INTERNAL SERVER ERROR. Cannot perform operation
  */
