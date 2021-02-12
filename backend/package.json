@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/VisargD/meme-stream#readme",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "image-url-validator": "^1.0.4",
     "mongoose": "^5.11.15",

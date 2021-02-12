@@ -10,6 +10,7 @@ const commentsRouter = require("./routes/comments");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/xmeme";
+const port = process.env.PORT || 8081;
 
 // MongoDB connection establishment
 mongoose
@@ -38,11 +39,9 @@ app.use(function (req, res, next) {
   );
   next();
 });
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(memesRouter);
-app.use(likeDislikeRouter);
-app.use(commentsRouter);
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -67,11 +66,19 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/swagger-ui", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+app.get("/", (req, res) => {
+  res.redirect("/swagger-ui");
+});
+
+app.use(memesRouter); // Routes for /memes
+app.use(likeDislikeRouter); // Routes for /likes and /dislikes
+app.use(commentsRouter); // Routes for /comments
+
 app.use((req, res, next) => {
   next(res.sendStatus(404));
 });
 
 // Starting server at port 8081
-app.listen(8081, () => {
+app.listen(port, () => {
   console.log("Server running on port 8081");
 });
