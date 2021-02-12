@@ -1,5 +1,3 @@
-import React, { useContext } from "react";
-import { MemeContext } from "../../context/MemeContext";
 import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
@@ -47,10 +45,6 @@ export default function MemePost(props) {
     onDislikeClick,
     onCommentClick,
   } = props;
-  const { like, dislike, comment } = useContext(MemeContext);
-  const [likes, setLikes] = like;
-  const [dislikes, setDislikes] = dislike;
-  const [comments, setComments] = comment;
 
   const classes = useStyles();
 
@@ -75,9 +69,7 @@ export default function MemePost(props) {
             startIcon={<ThumbUpOutlinedIcon />}
             onClick={onLikeClick}
           >
-            {likes.find((obj) => obj.id === memeItem.id)
-              ? likes.find((obj) => obj.id === memeItem.id).likes.length
-              : 0}
+            {memeItem.likes ? memeItem.likes.length : 0}
           </Button>
           <Button
             size="small"
@@ -85,9 +77,7 @@ export default function MemePost(props) {
             startIcon={<ThumbDownOutlinedIcon />}
             onClick={onDislikeClick}
           >
-            {dislikes.find((obj) => obj.id === memeItem.id)
-              ? dislikes.find((obj) => obj.id === memeItem.id).dislikes.length
-              : 0}
+            {memeItem.dislikes ? memeItem.dislikes.length : 0}
           </Button>
           <Button
             size="small"
@@ -95,28 +85,26 @@ export default function MemePost(props) {
             startIcon={<ChatBubbleOutlineIcon />}
             onClick={onCommentClick}
           >
-            {comments.find((obj) => obj.id === memeItem.id)
-              ? comments.find((obj) => obj.id === memeItem.id).comments.length
-              : 0}
+            {memeItem.comments ? memeItem.comments.length : 0}
           </Button>
-          </CardActions>
-          <CardActions>
+        </CardActions>
+        <CardActions>
           <Button
-            variant="contained"    
-            color="secondary"  
-            size="small"      
+            variant="contained"
+            color="secondary"
+            size="small"
             startIcon={<DeleteIcon />}
-            onClick={onDeleteClick}            
+            onClick={onDeleteClick}
           >
             Delete
           </Button>
-          
+
           <Button
-            variant="contained"    
-            color="primary"  
-            size="small"      
+            variant="contained"
+            color="primary"
+            size="small"
             startIcon={<EditIcon />}
-            onClick={onEditClick}            
+            onClick={onEditClick}
           >
             Edit
           </Button>

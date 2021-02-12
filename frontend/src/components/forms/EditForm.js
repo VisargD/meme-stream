@@ -29,7 +29,7 @@ export default function EditForm(props) {
     try {
       e.preventDefault();
       const data = await axios.patch("/memes/" + editItem.id, { url, caption });
-      const list = await axios.get("/memes");
+      const list = await axios.get("/memes/all");
       setMemes(list.data);
       setName("");
       setUrl("");

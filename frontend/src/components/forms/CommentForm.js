@@ -29,23 +29,20 @@ const useStyle = makeStyles((theme) => ({
 
 export default function CommentForm(props) {
   const { afterSubmit, commentItem } = props;
-  const { meme, comment } = useContext(MemeContext);
+  const { meme } = useContext(MemeContext);
   const [memes, setMemes] = meme;
-  const [comments, setComments] = comment;
   const [name, setName] = useState("");
   const [commentValue, setCommentValue] = useState("");
 
   const submitHandler = async (e) => {
     try {
-      e.preventDefault();
-      const data = await axios.get("/memes");
+      e.preventDefault();      
       await axios.put("/comments/" + commentItem.id, {
         name: name,
         comment: commentValue,
       });
-      const commentData = await axios.get("/comments");
-      setMemes(data.data);
-      setComments(commentData.data);
+      const data = await axios.get("/memes");
+      setMemes(data.data);      
       setName("");
       setCommentValue("");
       afterSubmit();

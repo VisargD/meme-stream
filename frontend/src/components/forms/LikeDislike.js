@@ -29,10 +29,8 @@ const useStyle = makeStyles((theme) => ({
 
 export default function LikeDislike(props) {
   const { afterSubmit, likeDislikeItem, type } = props;
-  const { meme, like, dislike } = useContext(MemeContext);
+  const { meme } = useContext(MemeContext);
   const [memes, setMemes] = meme;
-  const [likes, setLikes] = like;
-  const [dislikes, setDislikes] = dislike;
   const [name, setName] = useState("");
 
   const submitHandler = async (e) => {
@@ -43,13 +41,9 @@ export default function LikeDislike(props) {
       } else {
         await axios.put("/dislikes/" + likeDislikeItem.id, { name });
       }
-      const data = await axios.get("/memes");
-      const likeData = await axios.get("/likes");
-      const dislikeData = await axios.get("/dislikes");
+      const data = await axios.get("/memes/all");
       setMemes(data.data);
       setName("");
-      setLikes(likeData.data);
-      setDislikes(dislikeData.data);
       afterSubmit();
     } catch (e) {
       if (e.response.status === 403) {
@@ -86,7 +80,20 @@ export default function LikeDislike(props) {
         {type === "like" ? <h2>Liked By:</h2> : <h2>Disliked By:</h2>}
         <List>
           {type === "like"
-            ? likeDislikeItem.likes.map((item) => {
+            ? likeDislikeItem.likes
+              ? likeDislikeItem.likes.map((item) => {
+                  return (
+                    <>
+                      <ListItem>
+                        <ListItemText primary={item} />
+                      </ListItem>
+                      <Divider />
+                    </>
+                  );
+                })
+              : []
+            : likeDislikeItem.dislikes
+            ? likeDislikeItem.dislikes.map((item) => {
                 return (
                   <>
                     <ListItem>
@@ -96,16 +103,7 @@ export default function LikeDislike(props) {
                   </>
                 );
               })
-            : likeDislikeItem.dislikes.map((item) => {
-                return (
-                  <>
-                    <ListItem>
-                      <ListItemText primary={item} />
-                    </ListItem>
-                    <Divider />
-                  </>
-                );
-              })}
+            : []}
         </List>
       </form>
       <ToastContainer />

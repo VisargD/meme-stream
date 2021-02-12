@@ -24,11 +24,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MemeList() {
-  const { meme, like, dislike, comment } = useContext(MemeContext);
+  const { meme } = useContext(MemeContext);
   const [memes, setMemes] = meme;
-  const [likes, setLikes] = like;
-  const [dislikes, setDislikes] = dislike;
-  const [comments, setComments] = comment;
   const [openPopup, setOpenPopup] = useState(false);
   const [editItem, setEditItem] = useState({});
   const [likeDislikeItem, setLikeDislikeItem] = useState({});
@@ -40,7 +37,7 @@ export default function MemeList() {
   const deleteHandler = async (id) => {
     try {
       await axios.delete("/memes/" + id);
-      const data = await axios.get("/memes");
+      const data = await axios.get("/memes/all");
       setMemes(data.data);
       success("Deleted Successfully");
     } catch (e) {
@@ -76,17 +73,17 @@ export default function MemeList() {
               onLikeClick={() => {
                 setFormType("like");
                 setOpenPopup(true);
-                setLikeDislikeItem(likes.find((obj) => obj.id === meme.id));
+                setLikeDislikeItem(meme);
               }}
               onDislikeClick={() => {
                 setFormType("dislike");
                 setOpenPopup(true);
-                setLikeDislikeItem(dislikes.find((obj) => obj.id === meme.id));
+                setLikeDislikeItem(meme);
               }}
               onCommentClick={() => {
                 setFormType("comment");
                 setOpenPopup(true);
-                setCommentItem(comments.find((obj) => obj.id === meme.id));
+                setCommentItem(meme);
               }}
             />
           ))}

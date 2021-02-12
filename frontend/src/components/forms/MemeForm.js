@@ -20,11 +20,8 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function MemeForm(props) {
-  const { meme, like, dislike, comment } = useContext(MemeContext);
-  const [memes, setMemes] = meme;
-  const [likes, setLikes] = like;
-  const [dislikes, setDislikes] = dislike;
-  const [comments, setComments] = comment;
+  const { meme } = useContext(MemeContext);
+  const [memes, setMemes] = meme;  
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
   const [caption, setCaption] = useState("");
@@ -34,14 +31,8 @@ export default function MemeForm(props) {
     try {
       e.preventDefault();
       const data = await axios.post("/memes", { name, url, caption });
-      const list = await axios.get("/memes");
-      const likeData = await axios.get("/likes");
-      const dislikeData = await axios.get("/dislikes");
-      const commentData = await axios.get("/comments");
-      setMemes(list.data);
-      setLikes(likeData.data);
-      setDislikes(dislikeData.data);
-      setComments(commentData.data);
+      const list = await axios.get("/memes/all");      
+      setMemes(list.data);      
       setName("");
       setUrl("");
       setCaption("");
