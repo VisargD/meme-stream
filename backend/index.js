@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV !== "production") {
-  require('dotenv').config();
+  require("dotenv").config();
 }
 const express = require("express");
 const app = express();
@@ -9,7 +9,7 @@ const likeDislikeRouter = require("./routes/likeDislike");
 const commentsRouter = require("./routes/comments");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/xmeme';
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/xmeme";
 
 // MongoDB connection establishment
 mongoose
@@ -25,6 +25,19 @@ mongoose
     console.log(err);
   });
 
+// Allow Cross Origin Request
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(memesRouter);
