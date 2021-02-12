@@ -7,7 +7,7 @@ export const MemeProvider = (props) => {
   const [memes, setMemes] = useState([]);
 
   useEffect(async () => {
-    const data = await axios.get("/memes");
+    const data = await axios.get("/memes/all");
     setMemes(data.data);
   }, []);
 

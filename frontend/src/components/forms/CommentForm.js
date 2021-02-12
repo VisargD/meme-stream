@@ -36,13 +36,13 @@ export default function CommentForm(props) {
 
   const submitHandler = async (e) => {
     try {
-      e.preventDefault();      
+      e.preventDefault();
       await axios.put("/comments/" + commentItem.id, {
         name: name,
         comment: commentValue,
       });
-      const data = await axios.get("/memes");
-      setMemes(data.data);      
+      const data = await axios.get("/memes/all");
+      setMemes(data.data);
       setName("");
       setCommentValue("");
       afterSubmit();
@@ -83,19 +83,21 @@ export default function CommentForm(props) {
 
         <h2>Comments:</h2>
         <List>
-          {commentItem.comments.map((item) => {
-            return (
-              <>
-                <ListItem>
-                  <ListItemText primary={item.name} />
-                </ListItem>
-                <ListItem>
-                  <ListItemText secondary={item.comment} />
-                </ListItem>
-                <Divider />
-              </>
-            );
-          })}
+          {commentItem.comments
+            ? commentItem.comments.map((item) => {
+                return (
+                  <>
+                    <ListItem>
+                      <ListItemText primary={item.name} />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText secondary={item.comment} />
+                    </ListItem>
+                    <Divider />
+                  </>
+                );
+              })
+            : []}
         </List>
       </form>
       <ToastContainer />
