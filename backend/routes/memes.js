@@ -20,8 +20,8 @@ const checkId = require("../helpers/checkId");
  *    tags: [Memes]
  *    responses:
  *      '200':
- *        description: OK. Meme Posts fetched successfully. Returns a JSON Response 
- *                     which contains list of {id, name, url and caption}. Returns 
+ *        description: OK. Meme Posts fetched successfully. Returns a JSON Response
+ *                     which contains list of {id, name, url and caption}. Returns
  *                     empty array if there are no posts.
  *      '500':
  *        description: INTERNAL SERVER ERROR. Cannot perform operation
@@ -34,6 +34,30 @@ memesRouter.get("/memes", async (req, res) => {
       .select(projection)
       .sort({ timestamp: -1 })
       .limit(100);
+    res.json(memes);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
+/**
+ * @swagger
+ * /memes/all:
+ *  get:
+ *    description: Get the recent 100 meme posts in reverse chronological order with all the fields
+ *    tags: [Memes]
+ *    responses:
+ *      '200':
+ *        description: OK. Meme Posts fetched successfully. Returns a JSON Response
+ *                     which contains list of {id, name, url, caption, likes, dislikes, comments, timestamp}.
+ *                     Returns empty array if there are no posts.
+ *      '500':
+ *        description: INTERNAL SERVER ERROR. Cannot perform operation
+ */
+
+memesRouter.get("/memes/all", async (req, res) => {
+  try {
+    const memes = await Meme.find().sort({ timestamp: -1 });
     res.json(memes);
   } catch (err) {
     res.sendStatus(500);
