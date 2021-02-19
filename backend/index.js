@@ -1,6 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -9,8 +6,8 @@ const likeDislikeRouter = require("./routes/likeDislike");
 const commentsRouter = require("./routes/comments");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/xmeme";
-const port = process.env.PORT || 8081;
+const dbUrl = process.env.DOCKER || "mongodb://localhost:27017/xmeme";
+const port = 8081;
 
 // MongoDB connection establishment
 mongoose
