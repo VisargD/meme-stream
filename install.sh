@@ -14,9 +14,6 @@ sudo systemctl status mongod
 
 sudo systemctl enable mongod
 
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 
-. ~/.nvm/nvm.sh
-
-nvm install node
-
+sudo apt-get install -y nodejs
