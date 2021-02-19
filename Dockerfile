@@ -10,6 +10,8 @@ COPY ./backend .
 
 ENV PORT=8081
 
+ENV DOCKER="mongodb://mongo:27017/xmeme"
+
 EXPOSE 8081
 
 CMD [ "npm", "start" ]
